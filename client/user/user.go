@@ -18,7 +18,7 @@ import (
 type User struct {
 	Username       string        `json:"username"`
 	Token          *oauth2.Token `json:"token"`
-	symkey         []byte        `json:"symkey"`
+	SymKey         []byte        `json:"symkey"`
 	SharedFolder   string        `json:"sharedFolder"`
 	PrivateKeyPath string        `json:"privateKeyPath"`
 	driveClient    *drive.Service
@@ -109,7 +109,7 @@ func (user *User) SelectShared(name string) {
 	}
 
 	fmt.Println("Successfully decrypted the key: ", string(decrKey))
-	user.symkey = decrKey
+	user.SymKey = decrKey
 
 	// Save the user to a file.
 	user.ToFile()
@@ -139,7 +139,7 @@ func (user *User) Download(filename string) {
 	}
 
 	// Decrypt the data.
-	decrData, err := symkey.DecryptData(encrData, user.symkey)
+	decrData, err := symkey.DecryptData(encrData, user.SymKey)
 	if err != nil {
 		log.Fatal("Couldn't decrypt the file: ", err)
 		return

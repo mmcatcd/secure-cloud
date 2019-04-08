@@ -20,7 +20,7 @@ import (
 type Admin struct {
 	Username    string        `json:"username"`
 	Token       *oauth2.Token `json:"token"`
-	symkey      []byte        `json:"symkey"`
+	SymKey      []byte        `json:"symkey"`
 	driveClient *drive.Service
 }
 
@@ -37,7 +37,7 @@ func New(username string) *Admin {
 
 	admin := &Admin{}
 	admin.Username = username
-	admin.symkey = symkey
+	admin.SymKey = symkey
 
 	return admin
 }
@@ -97,7 +97,7 @@ the public key encrypted symmetric key to the 'keys' folder.
 func (admin *Admin) AddUser(email string, publicKey *rsa.PublicKey) {
 	// Encrypt symmetric key with users public key.
 	fmt.Println("Encrypting Symmetric Key with ", email, " public key...")
-	encryptedsymkey, err := asymkey.Encrypt(admin.symkey, publicKey)
+	encryptedsymkey, err := asymkey.Encrypt(admin.SymKey, publicKey)
 	if err != nil {
 		log.Fatal("Couldn't encrypt symmetric key with public key: ", err)
 		os.Exit(1)
@@ -206,7 +206,7 @@ func (admin *Admin) UploadFile(path string) {
 
 	// Encrypt data.
 	fmt.Println("Encrypting file...")
-	encrypted, err := symkey.EncryptData(data, admin.symkey)
+	encrypted, err := symkey.EncryptData(data, admin.SymKey)
 	if err != nil {
 		log.Fatal("Error encrypting the file: ", err)
 	}
